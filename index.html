@@ -162,7 +162,7 @@
 
   /* gateway acting door -> previews the soft cinematic world */
   .door__acting { --p1:#d9cfbe; --p2:#c7baa5; --p3:#e2dacd; }
-  .door__acting::after { content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, transparent 42%, rgba(40,34,28,.30) 100%); display:block; }
+  .door__acting::after { content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(180deg, transparent 28%, rgba(230,221,201,.5) 60%, rgba(230,221,201,.95) 100%); display:block; }
   .door__acting .door__eyebrow { font-family:'Jost',sans-serif; font-weight:400; color:#5c5346; letter-spacing:.34em; }
   .door__acting .door__title { font-family:'Cormorant Garamond',serif; font-weight:300; color:#2b2720; letter-spacing:.01em; }
   .door__acting .door__sub { color:#6b6355; font-family:'Jost',sans-serif; font-weight:300; }
@@ -244,6 +244,27 @@
     .act-hero__frame { height:76vh; }
     .facts2 { grid-template-columns:1fr; gap:18px; }
   }
+
+  /* gateway door photos */
+  .door__photo { position:absolute; inset:0; z-index:1; background-size:cover; background-position:center top; background-repeat:no-repeat; }
+  .door__acting .door__photo { background-image:url("cover.jpg"); }
+  .door__business .door__photo { background-image:url("business-cover.jpg"); opacity:0; transition:opacity 1s ease; }
+  .door__business::after { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(241,244,247,.5) 0%, transparent 38%, rgba(241,244,247,.86) 100%); opacity:0; transition:opacity 1s ease; }
+  .door__business:hover .door__photo, .door__business:hover::after { opacity:1; }
+
+  /* actor inner-page faint background portrait (colours stay dominant) */
+  .act-bg { position:fixed; inset:0; z-index:0; background:url("cover.jpg") center top/cover no-repeat; opacity:.09; filter:grayscale(.15) sepia(.1); pointer-events:none; }
+  #acting .view > .wrap { position:relative; z-index:1; }
+
+  /* about — two stacked portraits */
+  .about-portraits { display:grid; gap:16px; }
+
+  /* hero crossfade slideshow */
+  .act-hero__portrait .hero-slide { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.6s ease; z-index:0; }
+
+  /* business project promo link */
+  .proj-link { display:inline-flex; align-items:center; gap:8px; margin-top:14px; font-family:'Archivo',sans-serif; font-size:12px; font-weight:600; letter-spacing:.06em; color:var(--accent); }
+  .proj-link:hover { text-decoration:underline; }
 
   /* BUSINESS WORLD */
   #business { --bg:#eef1f4; --bg2:#ffffff; --ink:#0f1d2e; --muted:#5a6b7c; --line:rgba(15,29,46,.12); --accent:#2657a6; background: var(--bg); color: var(--ink); font-family: 'Inter', sans-serif; }
@@ -336,15 +357,16 @@
 <body>
 
 <!-- INTRO -->
-<div id="intro"><div class="name">Utkirbek Kakhorov<small>kautkir.uz</small></div></div>
+<div id="intro"><div class="name"><span data-i18n="nm.full">Utkirbek Kakhorov</span><small>kautkir.uz</small></div></div>
 
 <!-- GATEWAY -->
 <div id="gateway" class="hidden">
-  <div class="gateway__mark">Utkirbek Kakhorov</div>
+  <div class="gateway__mark" data-i18n="nm.full">Utkirbek Kakhorov</div>
   <div class="gw-langsel">
     <button data-lang="uz">UZ</button><button data-lang="en">EN</button>
   </div>
   <div class="door door__acting" data-go="acting">
+    <div class="door__photo"></div>
     <div class="door__inner">
       <div class="door__eyebrow" data-i18n="g.act.eyebrow">The things I get inspired by</div>
       <div class="door__title" data-i18n="g.act.title">The Actor</div>
@@ -353,6 +375,7 @@
     </div>
   </div>
   <div class="door door__business" data-go="business">
+    <div class="door__photo"></div>
     <div class="door__inner">
       <div class="door__eyebrow" data-i18n="g.biz.eyebrow">The things I get paid for</div>
       <div class="door__title" data-i18n="g.biz.title">Off Stage Business</div>
@@ -385,13 +408,12 @@
     <div class="wrap">
       <div class="act-hero">
         <div class="act-hero__frame">
-          <div class="portrait act-hero__portrait"><span class="ph-tag">Studio portrait</span><img src="hero.jpg" alt="Utkirbek Kakhorov" onerror="this.remove()"></div>
+          <div class="portrait act-hero__portrait"><span class="ph-tag">Studio portrait</span><img class="hero-slide" src="home-1.jpg" alt="Utkirbek Kakhorov" onerror="this.remove()"><img class="hero-slide" src="home-2.jpg" alt="Utkirbek Kakhorov" onerror="this.remove()"><img class="hero-slide" src="home-3.jpg" alt="Utkirbek Kakhorov" onerror="this.remove()"></div>
           <div class="act-hero__scrim"></div>
           <div class="act-hero__grain"></div>
           <div class="act-hero__caption">
             <div class="act-hero__kicker" data-i18n="ah.kicker">Stage &amp; Screen — Tashkent</div>
-            <h1 class="act-hero__name">Utkirbek Kakhorov</h1>
-            <a class="act-hero__showreel" href="https://cis.filmmakers.eu/en/actors/utkirbek-kakhorov/video/229730" target="_blank" rel="noopener" data-i18n="ah.showreel">▶ Watch showreel</a>
+            <h1 class="act-hero__name" data-i18n="nm.full">Utkirbek Kakhorov</h1>
           </div>
         </div>
         <p class="act-hero__tag" data-i18n="ah.tag">Stage and cinema actor based in Tashkent. Available worldwide for cinema and stage performance.</p>
@@ -399,11 +421,14 @@
     </div>
   </section>
 
-  <section class="view" data-view="about">
+  <section class="view" data-view="about"><div class="act-bg" aria-hidden="true"></div>
     <div class="wrap"><div class="act-section" style="border:0">
       <div class="eyebrow" data-i18n="n.about">About</div>
       <div class="about-grid">
-        <div class="portrait about-portrait"><span class="ph-tag">Studio portrait</span><img src="about.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.remove()"></div>
+        <div class="about-portraits">
+          <div class="portrait about-portrait"><span class="ph-tag">Portrait 01</span><img src="about-1.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.remove()"></div>
+          <div class="portrait about-portrait"><span class="ph-tag">Portrait 02</span><img src="about-2.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.remove()"></div>
+        </div>
         <div>
           <h2 class="act-h2" data-i18n="aa.h2">"Business is what I studied. Humanity is what I learned. Acting is where I use both."</h2>
           <p class="act-p" data-i18n="aa.p1"> I never earned an acting degree. Rather I chose to study people. My greatest classroom has never been a stage — it has been life. Studying Business Management gave me a career when I wasn't acting. Acting gave purpose to everything business taught me. One pays my bills. The other feeds my soul. Together, they make me who I am.</p>
@@ -419,7 +444,7 @@
     </div></div>
   </section>
 
-  <section class="view" data-view="gallery">
+  <section class="view" data-view="gallery"><div class="act-bg" aria-hidden="true"></div>
     <div class="wrap"><div class="act-section" style="border:0">
       <div class="eyebrow" data-i18n="n.gallery">Gallery</div>
       <h2 class="act-h2" style="margin-bottom:38px" data-i18n="ag.h2">In character.</h2>
@@ -435,7 +460,7 @@
     </div></div>
   </section>
 
-  <section class="view" data-view="filmography">
+  <section class="view" data-view="filmography"><div class="act-bg" aria-hidden="true"></div>
     <div class="wrap"><div class="act-section" style="border:0">
       <div class="eyebrow" data-i18n="n.film">Filmography</div>
       <h2 class="act-h2" style="margin-bottom:8px" data-i18n="af.h2">Screen work.</h2>
@@ -460,7 +485,7 @@
   </div>
 </section>
 
-<section class="view" data-view="theatre">
+<section class="view" data-view="theatre"><div class="act-bg" aria-hidden="true"></div>
     <div class="wrap"><div class="act-section" style="border:0">
       <div class="eyebrow" data-i18n="n.theatre">Theatre</div>
       <h2 class="act-h2" style="margin-bottom:8px" data-i18n="at.h2">On stage.</h2>
@@ -492,6 +517,7 @@
             <div><b data-i18n="at.l.written">Written by</b>Abdulhamid Choʻlpon</div>
             <div><b data-i18n="at.l.theatre">Theatre</b>Art House Hamsa</div>
           </div>
+          <a class="btn-trailer" href="https://youtu.be/aNdbt4wv8zo?si=Hm0ud_21ng6DWe95" target="_blank" rel="noopener" data-i18n="af.trailer">▶ Watch trailer</a>
         </div>
       </div>
 
@@ -502,16 +528,16 @@
           <h3 class="play-name">Dreams of Tashkent</h3>
           <p class="act-p" data-i18n="at.dreams.desc">An absurd miniplay drama staged at 139 Documentary Centre.</p>
           <div class="credits">
-            <div><b data-i18n="at.l.role">Role</b><span data-i18n="at.oydan.role">An arabic horse that transforms into man</span></div>
+            <div><b data-i18n="at.l.role">Role</b><span data-i18n="at.dreams.role">An arabic horse that transforms into man</span></div>
             <div><b data-i18n="at.l.director">Director</b>Abdulaziz Khodjaev, Aleksey Pistsov</div>
-            <div><b data-i18n="at.l.theatre">Stage</b>139 Documentary Centre</div>
+            <div><b data-i18n="at.l.stage">Stage</b>139 Documentary Centre</div>
           </div>
         </div>
       </div>
     </div></div>
   </section>
 
-  <section class="view" data-view="contact">
+  <section class="view" data-view="contact"><div class="act-bg" aria-hidden="true"></div>
     <div class="wrap"><div class="act-section" style="border:0">
       <div class="eyebrow" data-i18n="n.contact">Contact</div>
       <h2 class="act-h2" style="margin-bottom:40px" data-i18n="ac.h2">Get in touch.</h2>
@@ -533,13 +559,13 @@
     </div></div>
   </section>
 
-  <div class="wrap"><div class="footer">© <span class="yr"></span> Utkirbek Kakhorov · kautkir.uz · <span data-i18n="ft.act">The Actor</span></div></div>
+  <div class="wrap"><div class="footer">© <span class="yr"></span> <span data-i18n="nm.full">Utkirbek Kakhorov</span> · kautkir.uz · <span data-i18n="ft.act">The Actor</span></div></div>
 </div>
 
 <!-- BUSINESS APP -->
 <div id="business" class="app">
   <header class="topbar">
-    <div class="brand" data-go="gateway"><span class="dot"></span> UTKIRBEK KAKHOROV</div>
+    <div class="brand" data-go="gateway"><span class="dot"></span> <span data-i18n="nm.full">Utkirbek Kakhorov</span></div>
     <nav class="nav" id="nav-business">
       <a data-sec="home" class="on" data-i18n="n.home">Home</a>
       <a data-sec="about" data-i18n="n.about">About</a>
@@ -616,6 +642,7 @@
             <p data-i18n="bp.gs.d">Led architectural and design development phase of the leisure complex with Legacy Entertainment (USA), and ran the feasibility study with Leisure Development Partners (UK).</p>
             <div class="proj-metric"><span data-i18n="bp.gs.m">Design &amp; feasibility</span></div>
             <div class="proj-tags"><span>Leisure</span><span>Design Dev</span><span>Feasibility</span></div>
+            <a class="proj-link" href="https://youtu.be/acWG8rtN63A?si=Ir5RAsKW4u2DSTIU" target="_blank" rel="noopener" data-i18n="bp.gs.promo">▶ Watch project promo</a>
           </div>
         </div>
         <div class="proj-card">
@@ -729,9 +756,8 @@
           <div class="resume-role">
             <div class="resume-when">2026-2028</div>
             <div class="resume-what">
-              <h3 data-i18n="br.e1.t">MA in Creative Industries Management</h3>
+              <h3 data-i18n="br.ma.t">MA in Creative Industries Management</h3>
               <div class="co">Westminster International University in Tashkent (WIUT)</div>
-              </ul>
             </div>
           </div>
          <div class="resume-role">
@@ -758,30 +784,31 @@
     </div></div>
   </section>
 
-  <div class="wrap"><div class="footer">© <span class="yr"></span> Utkirbek · kautkir.uz · <span data-i18n="ft.biz">Business Development</span></div></div>
+  <div class="wrap"><div class="footer">© <span class="yr"></span> <span data-i18n="nm.first">Utkirbek</span> · kautkir.uz · <span data-i18n="ft.biz">Business Development</span></div></div>
 </div>
 
 <script>
   /* ---------- translations (Uzbek). English is the inline default. ---------- */
   const I18N_UZ = {
-    "g.act.eyebrow":"Ekran va Sahna","g.act.title":"Aktyor",
-    "g.act.sub":"Kino, televidenie va teatr. Rollar, namoyishlar va sahna ortidagi mehnat.",
-    "g.biz.eyebrow":"Biznesni rivojlantirish","g.biz.title":"Bunyodkor",
-    "g.biz.sub":"Strategiya, hamkorlik va o'sish. Loyihalar, natijalar va to'liq rezyume.",
+    "nm.full":"O'tkirbek Qahhorov","nm.first":"O'tkirbek",
+    "g.act.eyebrow":"Meni ilhomlantiruvchi faoliyatim",
+    "g.act.sub":"Chiroqlar va soyalar ostidagi ishlari. Sahnada va kamera qarshisida",
+    "g.biz.eyebrow":"Meni boquvchi faoliyatim",
+    "g.biz.sub":"Strategiya, hamkorlik &amp; rivojlanish",
     "g.enter":"Kirish",
     "n.home":"Bosh sahifa","n.about":"Men haqimda","n.gallery":"Galereya","n.film":"Filmografiya",
     "n.theatre":"Teatr","n.contact":"Aloqa","n.projects":"Loyihalar","n.resume":"Rezyume",
-    "sw.biz":"⇄ Biznes tomoni","sw.act":"⇄ Aktyorlik tomoni",
-    "ah.tag":"Toshkentda faoliyat yurituvchi sahna va kino aktyori — o'zbek, rus, ingliz va turk tillarida ijro etadi va Art House Hamsa eksperimental sahnasida ijod qiladi.",
+    "sw.biz":"⇄ Sahnadan tashqaridagi ishlar",
+    "ah.tag":"Toshkentda istiqomat qiluvchi sahna va film aktyori. Film va sahna asarlari uchun dunyo bo'ylab safarga tayyor",
     "ah.kicker":"Sahna va Ekran — Toshkent",
     "ah.showreel":"▶ Shourilni ko'rish","ah.selected":"Tanlangan ishlar",
-    "aa.h2":"Sahna va ekran o'rtasida.",
-    "aa.p1":"Utkirbek Kakhorov — Toshkentdagi Art House Hamsa eksperimental teatrida ijro etuvchi o'zbek sahna va kino aktyori. Shuningdek, u televidenie sohasidagi ishlari bilan ssenariynavis sifatida ham tanilgan.",
-    "aa.p2":"O'zbek, rus, ingliz va turk tillarida ijro etib, u o'z rollariga keng madaniy nuqtai nazar olib keladi — bu Toshkent Kino Akademiyasidagi ta'lim va teatr hamda kinodagi doimiy faoliyat orqali shakllangan.",
+    "aa.h2":"\"O'qiganim — Biznes. O'rganganim — Insoniyat. Aktyorlikda esa ikkalasi ham asqotadi.\"",
+    "aa.p1":"Aktyorlikda universitet ko'rmaganman. O'rniga insonlarni o'rganganman. Eng yaxshi treyning sahnada emas — hayotda bo'lgan. O'rniga esa Biznes boshqaruv bo'yicha o'qiganman va u meni rol o'ynamagan paytlarim och qolmasligimni ta'minladi. Aktyorlik esa Biznes menga o'rgatgan hamma narsaga maqsad biriktirdi. Bir soham soliqlarimni to'laydi, ikkinchisi esa qalbga ozuqa. Ikkalasi birgalikda - bir butun men.",
+    "aa.p2":"Aytgancha, aktyorlikda umuman xabarim yo'q emas — undan shunchaki diplomim yo'q xolos. Ustozlarim sa'y-harakatlari bilan qachonlardir parda ortida tanani bo'sh qo'yishmiyey, Stanislavski, Lekokmiyey... xullas quloqqa ozroq chalingan.",
     "aa.f.based":"Yashash joyi","aa.f.based.v":"Toshkent, O'zbekiston",
-    "aa.f.lang":"Tillar","aa.f.lang.v":"O'zbek · Rus · Ingliz · Turk",
+    "aa.f.lang":"Tillar","aa.f.lang.v":"O'zbek, Ingliz, Turk",
     "aa.f.height":"Bo'yi","aa.f.theatre":"Teatr",
-    "aa.f.training":"Ta'lim","aa.f.training.v":"Toshkent Kino Akademiyasi · Actscriptum",
+    "aa.f.training":"Ta'lim","aa.f.training.v":"Toshkent Film Akademiyasi · Actscriptum · Art House Hamsa eksperimental teatri",
     "aa.f.profiles":"Profillar",
     "ag.h2":"Rolda.","ag.note":"Bu yerga o'zingizning obraz va studiya suratlaringizni joylang — jadval nechta surat qo'shsangiz shunga moslashadi.",
     "af.h2":"Ekrandagi ishlar.",
@@ -792,8 +819,8 @@
     "af.l.director":"Rejissyor","af.l.producer":"Prodyuser","af.l.dist":"Tarqatuvchi",
     "af.trailer":"▶ Treylerni ko'rish","af.watchvid":"▶ Klipni ko'rish","af.note":"YouTube / platforma havolasini shu yerga qo'shing.",
     "at.h2":"Sahnada.",
-    "at.anjeer.cat":"2025 · Drama","at.anjeer.desc":"Art House Hamsa sahnasida, Elif Shafak asari asosida. Utkirbek Yousef rolini ijro etadi.",
-    "at.oydan.cat":"2025 · Drama","at.oydan.desc":"Art House Hamsa sahnasidagi drama, Abdulhamid Cho'lpon asari asosida; Utkirbek bosh rol — Qodirjonni ijro etadi.",
+    "at.anjeer.cat":"2025 · Drama","at.anjeer.desc":"Elif Shafaqning \"Yo'qolgan daraxtlar oroli\" asari asosida Art House Hamsada sahnalashtirilgan",
+    "at.oydan.cat":"2025 · Drama","at.oydan.desc":"Abdulhamid Cho'lpon hikoyalari va she'rlari asosida Art House Hamsada sahnalashtirilgan",
     "at.oydan.role":"Qodirjon — bosh rol",
     "at.l.role":"Rol","at.l.director":"Rejissyor","at.l.written":"Muallif","at.l.theatre":"Teatr",
     "ac.h2":"Bog'laning.","ac.name":"Ism","ac.name.ph":"Ismingiz","ac.email":"Email","ac.email.ph":"siz@email.com",
@@ -801,28 +828,28 @@
     "ac.note":"Formaning ishlashi uchun backend kerak — statik saytda Formspree ishlaydi.",
     "ac.based":"Yashash joyi","ac.based.v":"Toshkent",
     "ft.act":"Aktyor","ft.biz":"Biznesni rivojlantirish",
-    "bh.eyebrow":"Biznesni rivojlantirish · Loyiha boshqaruvi",
+    "bh.eyebrow":"Biznesni Rivojlantirish · Xalqaro Loyihalar Boshqaruvi",
     "bh.title":"Global brendlarni<br><span>yangi bozorlarga olib chiqaman.</span>",
-    "bh.tag":"Xalqaro mehmonxona biznesi, ko'ngilochar soha va franchayzing bo'yicha loyiha va biznes rivojlantirish mutaxassisi — yuqori darajadagi loyihalarni birinchi shartnomadan tantanali ochilishgacha boshqaraman.",
-    "bh.s1":"Yillik tajriba","bh.s2":"Xalqaro brendlar","bh.s3":"Tillar",
+    "bh.tag":"Turizm, ko'ngilochar, franshiza ustida ishlash, xalqaro aloqalar va davlat muassasasi sohalarida tajribaga ega loyihalar va biznes rivojlantirish bo'yicha professional. Yuqori saviyadagi xalqaro loyihalarni shartnoma bosqichidan, tantanali ochilish marosimigacha bo'lgan qismlarini boshqarganman",
+    "bh.s1":"Yillik tajriba","bh.s2":"Loyihalar","bh.s3":"Tillar",
     "ba.h2":"Chegaralar aro jahon darajasidagi konseptsiyalar.",
     "ba.p1":"Men xalqaro mehmonxona biznesi, ko'ngilochar soha va franchayzing bo'yicha tajribaga ega loyiha va biznes rivojlantirish mutaxassisiman. Loyihalarni g'oyadan ishga tushirishgacha boshqaraman — strategik hamkorliklar quraman va ko'p madaniyatli muhitda operatsion mukammallikni ta'minlayman.",
-    "ba.p2":"Men muloqot, muzokara va muvofiqlashtirish bilan tanilganman; global franchayzerlar, investorlar va davlat idoralari o'rtasidagi manfaatlarni boshqaraman. Ingliz, rus, o'zbek va turk tillarini bilaman va madaniyatlararo ishlashga o'rganganman — hozirda Toshkentda faoliyat yuritaman.",
+    "ba.p2":"Turli madaniyatlar orasida qulay ishlayman — bugungi kunda Toshkentdaman va davlat sektorida xalqaro aloqalarni rivojlantirish bilan mashg'ulman",
     "ba.c1.t":"Franchayzing va Mehmonxona","ba.c1.d":"Xalqaro HoReCa va hashamatli brendlarni shartnomadan operatsiyagacha bozorga olib chiqish.",
-    "ba.c2.t":"Strategik Hamkorliklar","ba.c2.d":"Global hamkorlar bilan MoU izlash, muzokara qilish va imzolash.",
-    "ba.c3.t":"Loyiha Boshqaruvi","ba.c3.d":"Dizayn, xarid, HR va operatsiyalar bo'ylab ko'p bosqichli loyihalarni boshqarish.",
+    "ba.c2.t":"Strategik Hamkorliklar","ba.c2.d":"Topish, kelishish va xorijiy hamkorlar bilan Anglashuv Memorandumlarini imzolash",
+    "ba.c3.t":"Loyiha Boshqaruvi","ba.c3.d":"Konsepsiya holatidan, dizayn, ta'minot va tatbiq etish/amalga oshirishdek multi-bosqichdan iborat loyihalar",
     "bp.h2":"Tanlangan loyihalar.",
-    "bp.czn.d":"CZN Burak franshizasining to'liq siklini boshqardim — shartnoma, qurilish, xarid, o'qitish va tantanali ochilish — turk franchayzeri va mahalliy investorlar o'rtasidagi asosiy bog'lovchi sifatida.",
+    "bp.czn.d":"Franshizaning to'liq hayotiy siklida boshida bo'lganman — qurilish, ta'minot, treyning va tantanali ochilish. Chet eldagi franchayzorlar va mahalliy investor orasida ko'prik vazifasini o'taganman.",
     "bp.czn.m":"G'oya → tantanali ochilish",
-    "bp.gs.d":"Legacy Entertainment (AQSh) bilan majmuaning arxitektura va dizayn rivojlanishini boshqardim, Leisure Development Partners (Buyuk Britaniya) bilan tijorat asosliligi tadqiqotini olib bordim.",
+    "bp.gs.d":"Markaziy Osiyoning eng katta dam olish-ko'ngilochar maskani bo'lishi ko'zda tutilgan loyihaning Arxitektura va dizayn tayyorlash bosqichida Legacy Entertainment (AQSh) bilan hamda texnik-iqtisodiy tahlil bosqichida LDP (Buyuk Britaniya) bilan hamkorlikda faoliyat olib borganman",
     "bp.gs.m":"Dizayn va tahlil",
     "bp.vk.d":"Shveytsariya gazlangan ichimlik brendining O'zbekistondagi rasmiy distributori sifatida import va mintaqaviy tarqatishni yo'lga qo'ydim — logistika, bojxona, sertifikatlash va chakana savdo.",
-    "bp.vk.m":"O'zbekistonda rasmiy distributor",
-    "bp.cl.d":"Hashamatli mehmonxona segmenti uchun Cova Pasticceria (LVMH Group, Milan) va Ladurée (Parij) bilan hamkorlik muzokaralari va MoU imzolanishini tashkil etdim.",
+    "bp.vk.m":"Rasmiy distributsiya",
+    "bp.cl.d":"COVA Pasticceria (LVMH Group, Milan) va Ladurée (Parij) singari lyuks segmentidagi brendlar bilan hamkorlik muzokaralarini olib borganman",
     "bp.cl.m":"MoU imzolandi",
-    "bp.caex.d":"Markaziy Osiyo Ko'rgazma Markazi ochilishida yuqori darajadagi mehmonlar uchun transport, joylashuv va VIP mehmondo'stlik logistikasini nazorat qildim.",
+    "bp.caex.d":"Central Asian Exhibition Centre (CAEx) ko'rgazmalar markazining katta ochilish marosimida ishtirok etuvchi yuqori martabali mehmonlarning Toshkentga tashrifini muvofiqlashtirganman",
     "bp.caex.m":"VIP tadbir tashkiloti",
-    "bp.teg.d":"TEG korporativ xayriya bo'limini tashkil etib ishga tushirdim — ta'lim, sog'liqni saqlash va ijtimoiy dasturlar orqali ayollar va bolalarni qo'llab-quvvatlaydi.",
+    "bp.teg.d":"TEGning ayollar va bolalarni ta'lim, salomatlik va ijtimoiy rivojlanish sohalarida rivojlanishga e'tibor qaratuvchi xayriya faoliyatini noldan yo'lga qo'yganman",
     "bp.teg.m":"Asoschi",
     "br.aside.h2":"Ko'nikmalar va aloqa.",
     "br.sk1":"Loyiha boshqaruvi","br.sk2":"Franchayzing rivojlantirish","br.sk3":"Hamkorlik va MoU",
@@ -830,7 +857,7 @@
     "br.sk7":"Manfaatdorlar bilan ishlash","br.sk8":"Madaniyatlararo muloqot",
     "br.l.langs":"Tillar","br.l.tools":"Vositalar","br.l.contact":"Aloqa","br.cv":"↓ CVni yuklab olish (PDF)",
     "br.lang.en":"Ingliz — Yuqori","br.lang.tr":"Turk — Yuqori","br.lang.ru":"Rus — O'rta","br.lang.uz":"O'zbek — Ona tili",
-    "br.r1.t":"Yetakchi mutaxassis, Xalqaro hamkorlik",
+    "br.r1.t":"Bosh mutaxassis, Xalqaro hamkorlik",
     "br.r1.co":"O'zbekiston Respublikasi Omonatlarni Kafolatlash Agentligi · Toshkent",
     "br.r1.b1":"Xorijiy omonat kafolatlash agentliklari, xalqaro moliya tashkilotlari va hamkor muassasalar bilan institutsional hamkorlikni muvofiqlashtiraman.",
     "br.r1.b2":"Ikki va ko'p tomonlama uchrashuvlar, rasmiy tashriflar, o'quv safarlari va texnik almashinuv dasturlarini tashkil etaman.",
@@ -850,7 +877,13 @@
     "br.e1.b1":"Dissertatsiya: \"Filmlar orqali brending va iste'molchi jalb etilishi — madaniyatlararo tahlil.\"",
     "br.e1.b2":"Marketing strategiyasi, brend boshqaruvi va iste'molchi xulqiga yo'naltirilgan.",
     "br.e2.t":"Akademik litsey, Xorijiy tillar",
-    "br.e2.b1":"Dunyoni anglash va madaniyatlararo muloqot bo'yicha ko'p yo'nalishli poydevor."
+    "br.e2.b1":"Dunyoni anglash va madaniyatlararo muloqot bo'yicha ko'p yo'nalishli poydevor.",
+    "at.dreams.cat":"2024 · Drama",
+    "at.dreams.desc":"139 Hujjatli Markazda sahnalashtirilgan absurd mini-pyesa.",
+    "at.dreams.role":"Odamga aylanadigan arab oti",
+    "at.l.stage":"Sahna",
+    "br.ma.t":"Ijodiy sanoat menejmenti magistri (MA)",
+    "bp.gs.promo":"▶ Loyiha promo-rolikini ko'rish"
   };
 
   const origEN = new Map();
@@ -921,6 +954,28 @@
   if(location.hash && location.hash !== '#/'){ intro.style.display='none'; route(); }
   else if(reduce){ intro.style.display='none'; showGateway(); }
   else { setTimeout(function(){ intro.classList.add('lift'); }, 2100); setTimeout(function(){ intro.style.display='none'; showGateway(); }, 3100); }
+
+  /* ---------- hero photo slideshow ---------- */
+  (function(){
+    var wrap = document.querySelector('#acting .act-hero__portrait');
+    if(!wrap) return;
+    function start(){
+      var slides = [].slice.call(wrap.querySelectorAll('.hero-slide')).filter(function(im){
+        return im.parentNode && (im.complete ? im.naturalWidth > 0 : true);
+      });
+      if(!slides.length) return;
+      var i = 0;
+      slides.forEach(function(el, idx){ el.style.opacity = idx === 0 ? '1' : '0'; });
+      if(slides.length < 2 || reduce) return;
+      setInterval(function(){
+        slides[i].style.opacity = '0';
+        i = (i + 1) % slides.length;
+        slides[i].style.opacity = '1';
+      }, 5000);
+    }
+    if(document.readyState === 'complete') setTimeout(start, 900);
+    else window.addEventListener('load', function(){ setTimeout(start, 900); });
+  })();
 </script>
 </body>
 </html>
