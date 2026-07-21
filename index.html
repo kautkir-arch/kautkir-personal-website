@@ -327,7 +327,8 @@
     .resume-aside { position: static; }
     .act-hero__portrait, .biz-hero__portrait { min-height: 46vh; }
     .nav { position: fixed; inset: 0 0 auto 0; top: 60px; flex-direction: column; align-items: stretch; padding: 10px 20px 20px; display: none; -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px); }
-    #acting .nav { background: rgba(23,17,15,.96); border-bottom: 1px solid var(--line); }
+    #acting .nav { background: rgba(230,223,210,.98); border-bottom: 1px solid var(--line); }
+    #acting .nav a { opacity: .82; color: var(--ink); }
     #business .nav { background: rgba(238,241,244,.98); border-bottom: 1px solid var(--line); }
     .nav.open { display: flex; }
     .nav a { padding: 13px 4px; font-size: 15px; }
@@ -474,7 +475,7 @@
             <div><b data-i18n="at.l.role">Role</b><span data-i18n="af.tomchi.role">Bilol — supporting role</span></div>
             <div><b data-i18n="af.l.director">Director</b>Abdulaziz Khodjaev</div>
             <div><b data-i18n="af.l.producer">Producer</b>Sanjar Kenjayev</div>
-            <div><b data-i18n="af.l.dist">Distribution</b>Tashkent Film Academy</div>
+            <div><b data-i18n="af.l.dist">Distribution</b><span data-i18n="af.tomchi.dist.v">Tashkent Film Academy</span></div>
           </div>
           <p class="act-p" data-i18n="af.tomchi.desc">A television series produced through the Tashkent Film Academy, directed by Abdulaziz Khodjaev.</p>
           <div class="stills"><div class="portrait"><span class="ph-tag">Still</span><img src="tomchi-1.jpg" alt="Tom-chi still" loading="lazy" onerror="this.remove()"></div><div class="portrait"><span class="ph-tag">Still</span><img src="tomchi-2.jpg" alt="Tom-chi still" loading="lazy" onerror="this.remove()"></div><div class="portrait"><span class="ph-tag">Still</span><img src="tomchi-3.jpg" alt="Tom-chi still" loading="lazy" onerror="this.remove()"></div></div>
@@ -525,7 +526,7 @@
         <div class="portrait play-img"><span class="ph-tag">Production photo</span><img src="dreams.jpg" alt="Dreams of Tashkent — 139 Documentary Centre" loading="lazy" onerror="this.remove()"></div>
         <div>
           <div class="kick" data-i18n="at.dreams.cat">2024 · Drama</div>
-          <h3 class="play-name">Dreams of Tashkent</h3>
+          <h3 class="play-name" data-i18n="at.dreams.title">Dreams of Tashkent</h3>
           <p class="act-p" data-i18n="at.dreams.desc">An absurd miniplay drama staged at 139 Documentary Centre.</p>
           <div class="credits">
             <div><b data-i18n="at.l.role">Role</b><span data-i18n="at.dreams.role">An arabic horse that transforms into man</span></div>
@@ -553,7 +554,7 @@
         <div>
           <dl class="contact-line"><dt>Email</dt><dd>info@kautkir.uz</dd></dl>
           <dl class="contact-line"><dt>Instagram</dt><dd><a href="https://www.instagram.com/kautkir/" target="_blank" rel="noopener">@kautkir</a></dd></dl>
-          <dl class="contact-line"><dt>IMDb</dt><dd><a href="https://www.imdb.com/name/nm12740646" target="_blank" rel="noopener">Profile ↗</a></dd></dl>
+          <dl class="contact-line"><dt>IMDb</dt><dd><a href="https://www.imdb.com/name/nm12740646" target="_blank" rel="noopener" data-i18n="ac.profile">Profile ↗</a></dd></dl>
           <dl class="contact-line"><dt data-i18n="ac.based">Based in</dt><dd data-i18n="ac.based.v">Tashkent</dd></dl>
         </div>
       </div>
@@ -632,7 +633,7 @@
             <h3>CZN Burak Gurme Restaurant</h3>
             <p data-i18n="bp.czn.d">Directed the full franchise lifecycle — construction, procurement, training and grand opening — as lead liaison between the overseas franchisor and local investors.</p>
             <div class="proj-metric"><span data-i18n="bp.czn.m">Concept → grand opening</span></div>
-            <div class="proj-tags"><span>Franchise</span><span>HoReCa</span><span>Operations</span></div>
+            <div class="proj-tags"><span data-i18n="bt.franchise">Franchise</span><span>HoReCa</span><span data-i18n="bt.operations">Operations</span></div>
           </div>
         </div>
         <div class="proj-card">
@@ -642,7 +643,7 @@
             <h3>The Grand Serai</h3>
             <p data-i18n="bp.gs.d">Led architectural and design development phase of the leisure complex with Legacy Entertainment (USA), and ran the feasibility study with Leisure Development Partners (UK).</p>
             <div class="proj-metric"><span data-i18n="bp.gs.m">Design &amp; feasibility</span></div>
-            <div class="proj-tags"><span>Leisure</span><span>Design Dev</span><span>Feasibility</span></div>
+            <div class="proj-tags"><span data-i18n="bt.leisure">Leisure</span><span data-i18n="bt.designdev">Design Dev</span><span data-i18n="bt.feasibility">Feasibility</span></div>
             <a class="proj-link" href="https://youtu.be/acWG8rtN63A?si=Ir5RAsKW4u2DSTIU" target="_blank" rel="noopener" data-i18n="bp.gs.promo">▶ Watch project promo</a>
           </div>
         </div>
@@ -650,10 +651,10 @@
           <div class="portrait" style="--p1:#5a8a6b"><span class="ph-tag">Project image</span></div>
           <div class="proj-body">
             <div class="proj-org">TEG · Akfa Holding · 2023–2025</div>
-            <h3>Vivi Kola — Market Entry</h3>
+            <h3 data-i18n="bp.vk.title">Vivi Kola — Market Entry</h3>
             <p data-i18n="bp.vk.d">Set up import and regional distribution for the Swiss soft-drink brand as its official distributor in Uzbekistan — logistics, customs, certification and retail entry.</p>
             <div class="proj-metric"><span data-i18n="bp.vk.m">Official distribution</span></div>
-            <div class="proj-tags"><span>FMCG</span><span>Distribution</span><span>Market Entry</span></div>
+            <div class="proj-tags"><span>FMCG</span><span data-i18n="bt.distribution">Distribution</span><span data-i18n="bt.marketentry">Market Entry</span></div>
           </div>
         </div>
         <div class="proj-card">
@@ -663,17 +664,17 @@
             <h3>Cova Pasticceria &amp; Ladurée</h3>
             <p data-i18n="bp.cl.d">Facilitated partnership negotiations and MoU Projections with Cova Pasticceria (LVMH Group, Milan) and Ladurée (Paris) for the luxury hospitality segment.</p>
             <div class="proj-metric"><span data-i18n="bp.cl.m">MoUs signed</span></div>
-            <div class="proj-tags"><span>LVMH</span><span>Luxury</span><span>MoU</span></div>
+            <div class="proj-tags"><span>LVMH</span><span data-i18n="bt.luxury">Luxury</span><span>MoU</span></div>
           </div>
         </div>
         <div class="proj-card">
           <div class="portrait" style="--p1:#6b6b8a"><span class="ph-tag">Project image</span></div>
           <div class="proj-body">
             <div class="proj-org">TEG · Akfa Holding · 2024</div>
-            <h3>CAEx Center — Grand Opening</h3>
+            <h3 data-i18n="bp.caex.title">CAEx Center — Grand Opening</h3>
             <p data-i18n="bp.caex.d">Oversaw transportation, accommodation and VIP hospitality logistics for high-level guests and dignitaries at the Central Asian Exhibition Center grand opening.</p>
             <div class="proj-metric"><span data-i18n="bp.caex.m">VIP event delivery</span></div>
-            <div class="proj-tags"><span>Events</span><span>VIP Logistics</span></div>
+            <div class="proj-tags"><span data-i18n="bt.events">Events</span><span>VIP Logistics</span></div>
           </div>
         </div>
         <div class="proj-card">
@@ -683,7 +684,7 @@
             <h3>TEG Foundation</h3>
             <p data-i18n="bp.teg.d">From scratch, launched TEG's corporate charity division, supporting women and children through education, healthcare and social development programs.</p>
             <div class="proj-metric"><span data-i18n="bp.teg.m">Founder</span></div>
-            <div class="proj-tags"><span>CSR</span><span>Social Impact</span></div>
+            <div class="proj-tags"><span>CSR</span><span data-i18n="bt.socialimpact">Social Impact</span></div>
           </div>
         </div>
       </div>
@@ -716,7 +717,7 @@
         </div>
         <div>
           <div class="resume-role">
-            <div class="resume-when">2025 — Now</div>
+            <div class="resume-when" data-i18n="br.r1.when">2025 — Now</div>
             <div class="resume-what">
               <h3 data-i18n="br.r1.t">Senior Specialist, International Cooperations</h3>
               <div class="co" data-i18n="br.r1.co">Deposit Guarantee Agency of the Republic of Uzbekistan · Tashkent</div>
@@ -792,6 +793,10 @@
   /* ---------- translations (Uzbek). English is the inline default. ---------- */
   const I18N_UZ = {
     "nm.full":"O'tkirbek Qahhorov","nm.first":"O'tkirbek",
+    "g.act.title":"Aktyor","g.biz.title":"Biznes","sw.act":"⇄ Aktyorlik faoliyati",
+    "af.tomchi.dist.v":"Toshkent Film Akademiyasi","at.dreams.title":"Toshkent tushlari","ac.profile":"Profil ↗",
+    "bp.vk.title":"Vivi Kola — Bozorga kirish","bp.caex.title":"CAEx Center — Tantanali ochilish marosimi","br.r1.when":"2025 — Hozir",
+    "bt.franchise":"Franshiza","bt.operations":"Faoliyat","bt.leisure":"Ko'ngilochar","bt.designdev":"Dizayn ishlab chiqish","bt.feasibility":"Texnik-iqtisodiy tahlil","bt.distribution":"Distributsiya","bt.marketentry":"Bozorga kirish","bt.luxury":"Lyuks","bt.events":"Tadbirlar","bt.socialimpact":"Ijtimoiy ta'sir",
     "g.act.eyebrow":"Meni ilhomlantiruvchi faoliyatim",
     "g.act.sub":"Chiroqlar va soyalar ostidagi ishlari. Sahnada va kamera qarshisida",
     "g.biz.eyebrow":"Meni boquvchi faoliyatim",
