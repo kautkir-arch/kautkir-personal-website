@@ -542,13 +542,14 @@
       <div class="eyebrow" data-i18n="n.contact">Contact</div>
       <h2 class="act-h2" style="margin-bottom:40px" data-i18n="ac.h2">Get in touch.</h2>
       <div class="contact-grid">
-        <div>
-          <div class="field"><label data-i18n="ac.name">Name</label><input type="text" placeholder="Your name" data-i18n-ph="ac.name.ph"></div>
-          <div class="field"><label data-i18n="ac.email">Email</label><input type="email" placeholder="you@email.com" data-i18n-ph="ac.email.ph"></div>
-          <div class="field"><label data-i18n="ac.msg">Message</label><textarea placeholder="Your message" data-i18n-ph="ac.msg.ph"></textarea></div>
-          <button class="btn-send" type="button" data-i18n="ac.send">Send message</button>
-          <p class="placeholder-note" style="margin-top:16px" data-i18n="ac.note">Form needs a backend to actually send — Formspree works on a static site.</p>
-        </div>
+        <form class="contact-form" action="https://formspree.io/f/mbdnkyjo" method="POST">
+          <div class="field"><label data-i18n="ac.name">Name</label><input type="text" name="name" placeholder="Your name" data-i18n-ph="ac.name.ph" required></div>
+          <div class="field"><label data-i18n="ac.email">Email</label><input type="email" name="email" placeholder="you@email.com" data-i18n-ph="ac.email.ph" required></div>
+          <div class="field"><label data-i18n="ac.msg">Message</label><textarea name="message" placeholder="Your message" data-i18n-ph="ac.msg.ph" required></textarea></div>
+          <input type="hidden" name="_subject" value="New message from kautkir.uz">
+          <button class="btn-send" type="submit" data-i18n="ac.send">Send message</button>
+          <p class="form-status placeholder-note" style="margin-top:16px" aria-live="polite"></p>
+        </form>
         <div>
           <dl class="contact-line"><dt>Email</dt><dd>info@kautkir.uz</dd></dl>
           <dl class="contact-line"><dt>Instagram</dt><dd><a href="https://www.instagram.com/kautkir/" target="_blank" rel="noopener">@kautkir</a></dd></dl>
@@ -975,6 +976,34 @@
     }
     if(document.readyState === 'complete') setTimeout(start, 900);
     else window.addEventListener('load', function(){ setTimeout(start, 900); });
+  })();
+  /* ---------- contact form (Formspree, inline thank-you) ---------- */
+  (function(){
+    var form = document.querySelector('.contact-form');
+    if(!form) return;
+    var status = form.querySelector('.form-status');
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var uz = document.documentElement.lang === 'uz';
+      var btn = form.querySelector('.btn-send');
+      if(btn) btn.disabled = true;
+      if(status){ status.style.opacity = '.85'; status.textContent = uz ? 'Yuborilmoqda…' : 'Sending…'; }
+      fetch(form.action, { method:'POST', body:new FormData(form), headers:{ 'Accept':'application/json' } })
+        .then(function(r){
+          if(r.ok){
+            form.reset();
+            if(status) status.textContent = uz ? 'Rahmat! Xabaringiz yuborildi.' : 'Thank you — your message has been sent.';
+          } else {
+            return r.json().then(function(d){
+              if(status) status.textContent = (d && d.errors && d.errors.length)
+                ? d.errors.map(function(x){return x.message;}).join(', ')
+                : (uz ? 'Xatolik yuz berdi. Keyinroq urinib ko\u2019ring.' : 'Something went wrong. Please try again.');
+            });
+          }
+        })
+        .catch(function(){ if(status) status.textContent = uz ? 'Tarmoq xatosi. Keyinroq urinib ko\u2019ring.' : 'Network error. Please try again.'; })
+        .then(function(){ if(btn) btn.disabled = false; });
+    });
   })();
 </script>
 </body>
