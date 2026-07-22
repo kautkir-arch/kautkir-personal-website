@@ -752,7 +752,7 @@
             <div>info@kautkir.uz</div><div>+998 93 693 44 48</div>
             <div><a href="https://www.linkedin.com/in/utkirbek-kakhorov-2b2977217/" style="color:var(--accent)">LinkedIn ↗</a></div>
           </div>
-          <a class="btn-cv" href="#" data-i18n="br.cv">↓ Download CV (PDF)</a>
+          <a class="btn-cv" id="cv-link" href="cv.pdf" target="_blank" rel="noopener" download data-i18n="br.cv">↓ Download CV (PDF)</a>
         </div>
         <div>
           <div class="resume-role">
@@ -1091,6 +1091,17 @@
       else if(e.key === 'ArrowLeft') show(idx-1);
       else if(e.key === 'ArrowRight') show(idx+1);
     });
+  })();
+  /* ---------- hide CV button until cv.pdf exists ---------- */
+  (function(){
+    var cv = document.getElementById('cv-link');
+    if(!cv || location.protocol === 'file:') return;
+    fetch('cv.pdf', { method:'HEAD' })
+      .then(function(r){
+        var ok = r.ok && (r.headers.get('content-type')||'').toLowerCase().indexOf('pdf') !== -1;
+        if(!ok) cv.style.display = 'none';
+      })
+      .catch(function(){ cv.style.display = 'none'; });
   })();
 </script>
 </body>
