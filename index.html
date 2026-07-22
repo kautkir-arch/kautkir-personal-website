@@ -202,9 +202,34 @@
   .facts2 dd a { color:var(--ink); border-bottom:1px solid var(--line); }
   .facts2 dd a:hover { border-color:var(--accent); color:var(--accent); }
 
-  /* gallery — soft matted grid */
-  .gallery-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-  .gallery-grid .portrait { aspect-ratio:4/5; }
+  /* gallery — album masonry, greyscale until hover */
+  .gallery-grid { columns:3; column-gap:22px; }
+  .g-item { break-inside:avoid; position:relative; margin:0 0 22px; cursor:zoom-in; transition:transform .55s var(--ease); }
+  .g-item:nth-child(3n+1){ transform:rotate(-.55deg); }
+  .g-item:nth-child(3n+2){ transform:rotate(.45deg); margin-top:16px; }
+  .g-item:nth-child(3n+3){ transform:rotate(-.2deg); }
+  .g-item:nth-child(4n+2){ width:88%; margin-left:auto; }
+  .g-item:nth-child(4n+3){ width:94%; }
+  .g-item:nth-child(5n+5){ width:82%; margin-left:9%; }
+  .g-item img { width:100%; height:auto; display:block; border-radius:2px; filter:grayscale(1) contrast(1.02); box-shadow:0 8px 30px rgba(47,43,36,.13); transition:filter .6s ease; }
+  .g-item::after { content:""; position:absolute; inset:0; pointer-events:none; border-radius:2px; box-shadow:inset 0 0 34px 10px var(--paper); transition:box-shadow .5s ease; }
+  .g-item:hover { transform:rotate(0deg) translateY(-5px); z-index:2; }
+  .g-item:hover img { filter:grayscale(0); }
+  .g-item:hover::after { box-shadow:inset 0 0 20px 4px rgba(228,221,208,.4); }
+  @media (hover:none){ .g-item img { filter:grayscale(0); } .g-item { transform:none; } }
+  @media (max-width:900px){ .gallery-grid { columns:2; } }
+  @media (max-width:560px){ .gallery-grid { columns:1; } }
+
+  /* lightbox */
+  .lightbox { position:fixed; inset:0; z-index:200; background:rgba(24,20,16,.95); display:none; align-items:center; justify-content:center; }
+  .lightbox.open { display:flex; }
+  .lightbox img { max-width:92vw; max-height:88vh; object-fit:contain; box-shadow:0 24px 70px rgba(0,0,0,.55); }
+  .lightbox button { position:absolute; background:none; border:0; color:#f3ede2; cursor:pointer; opacity:.7; transition:opacity .3s; font-family:var(--sans); font-weight:300; }
+  .lightbox button:hover { opacity:1; }
+  .lb-close { top:16px; right:24px; font-size:34px; line-height:1; }
+  .lb-prev, .lb-next { top:50%; transform:translateY(-50%); font-size:46px; padding:8px 20px; }
+  .lb-prev { left:6px; } .lb-next { right:6px; }
+  .lb-count { position:absolute; bottom:22px; left:0; right:0; text-align:center; color:rgba(243,237,226,.65); font-family:var(--sans); font-size:11px; letter-spacing:.24em; }
 
   /* filmography + theatre — elegant entries */
   .film-entry { display:grid; grid-template-columns:.8fr 1.2fr; gap:54px; padding:58px 0; border-bottom:1px solid var(--line); align-items:start; }
@@ -448,16 +473,20 @@
   <section class="view" data-view="gallery"><div class="act-bg" aria-hidden="true"></div>
     <div class="wrap"><div class="act-section" style="border:0">
       <div class="eyebrow" data-i18n="n.gallery">Gallery</div>
-      <h2 class="act-h2" style="margin-bottom:38px" data-i18n="ag.h2">In character.</h2>
-      <div class="gallery-grid">
-        <div class="portrait"><span class="ph-tag">Plate 01</span><img src="gallery-1.jpg" alt="Utkirbek Kakhorov in character" loading="lazy" onerror="this.remove()"></div>
-        <div class="portrait"><span class="ph-tag">Plate 02</span><img src="gallery-2.jpg" alt="Utkirbek Kakhorov in character" loading="lazy" onerror="this.remove()"></div>
-        <div class="portrait"><span class="ph-tag">Plate 03</span><img src="gallery-3.jpg" alt="Utkirbek Kakhorov in character" loading="lazy" onerror="this.remove()"></div>
-        <div class="portrait"><span class="ph-tag">Plate 04</span><img src="gallery-4.jpg" alt="Utkirbek Kakhorov in character" loading="lazy" onerror="this.remove()"></div>
-        <div class="portrait"><span class="ph-tag">Plate 05</span><img src="gallery-5.jpg" alt="Utkirbek Kakhorov in character" loading="lazy" onerror="this.remove()"></div>
-        <div class="portrait"><span class="ph-tag">Plate 06</span><img src="gallery-6.jpg" alt="Utkirbek Kakhorov in character" loading="lazy" onerror="this.remove()"></div>
+      <div class="gallery-grid" style="margin-top:34px">
+        <figure class="g-item"><img src="gallery-1.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-2.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-3.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-4.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-5.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-6.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-7.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-8.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-9.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-10.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-11.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
+        <figure class="g-item"><img src="gallery-12.jpg" alt="Utkirbek Kakhorov" loading="lazy" onerror="this.closest('.g-item').remove()"></figure>
       </div>
-      <p class="placeholder-note" style="margin-top:18px" data-i18n="ag.note">Drop your character and studio images here — grid grows to fit however many you add.</p>
     </div></div>
   </section>
 
@@ -561,6 +590,13 @@
     </div></div>
   </section>
 
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lb-close" aria-label="Close">&times;</button>
+    <button class="lb-prev" aria-label="Previous">&#8249;</button>
+    <img src="" alt="">
+    <button class="lb-next" aria-label="Next">&#8250;</button>
+    <div class="lb-count"></div>
+  </div>
   <div class="wrap"><div class="footer">© <span class="yr"></span> <span data-i18n="nm.full">Utkirbek Kakhorov</span> · kautkir.uz · <span data-i18n="ft.act">The Actor</span></div></div>
 </div>
 
@@ -816,7 +852,7 @@
     "aa.f.height":"Bo'yi","aa.f.theatre":"Teatr",
     "aa.f.training":"Ta'lim","aa.f.training.v":"Toshkent Film Akademiyasi · Actscriptum · Art House Hamsa eksperimental teatri",
     "aa.f.profiles":"Profillar",
-    "ag.h2":"Rolda.","ag.note":"Bu yerga o'zingizning obraz va studiya suratlaringizni joylang — jadval nechta surat qo'shsangiz shunga moslashadi.",
+    
     "af.h2":"Ekrandagi ishlar.",
     "af.tomchi.cat":"2023 · Serial","af.tomchi.role":"Bilol — ikkinchi darajali rol",
     "af.tomchi.desc":"Toshkent Kino Akademiyasi tomonidan suratga olingan teleserial, rejissyor Abdulaziz Xodjaev.",
@@ -1008,6 +1044,38 @@
         })
         .catch(function(){ if(status) status.textContent = uz ? 'Tarmoq xatosi. Keyinroq urinib ko\u2019ring.' : 'Network error. Please try again.'; })
         .then(function(){ if(btn) btn.disabled = false; });
+    });
+  })();
+  /* ---------- gallery lightbox ---------- */
+  (function(){
+    var grid = document.querySelector('#acting .gallery-grid');
+    var lb = document.getElementById('lightbox');
+    if(!grid || !lb) return;
+    var lbImg = lb.querySelector('img'), count = lb.querySelector('.lb-count'), idx = 0;
+    function list(){ return [].slice.call(grid.querySelectorAll('.g-item img')); }
+    function show(i){
+      var a = list(); if(!a.length) return;
+      idx = (i + a.length) % a.length;
+      lbImg.src = a[idx].src; lbImg.alt = a[idx].alt || '';
+      if(count) count.textContent = (idx+1) + ' / ' + a.length;
+    }
+    function close(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+    grid.addEventListener('click', function(e){
+      var im = e.target.closest ? e.target.closest('.g-item img') : null;
+      if(!im) return;
+      show(list().indexOf(im));
+      lb.classList.add('open'); document.body.style.overflow='hidden';
+    });
+    lb.addEventListener('click', function(e){
+      if(e.target === lb || e.target.classList.contains('lb-close')) close();
+    });
+    lb.querySelector('.lb-prev').addEventListener('click', function(e){ e.stopPropagation(); show(idx-1); });
+    lb.querySelector('.lb-next').addEventListener('click', function(e){ e.stopPropagation(); show(idx+1); });
+    document.addEventListener('keydown', function(e){
+      if(!lb.classList.contains('open')) return;
+      if(e.key === 'Escape') close();
+      else if(e.key === 'ArrowLeft') show(idx-1);
+      else if(e.key === 'ArrowRight') show(idx+1);
     });
   })();
 </script>
