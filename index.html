@@ -269,19 +269,19 @@
   #acting .footer { font-family:var(--sans); font-weight:400; letter-spacing:.14em; text-transform:uppercase; font-size:10px; color:var(--muted); }
 
   /* ambient sound control */
-  .snd { position:fixed; right:18px; bottom:18px; z-index:55; width:42px; height:42px; border-radius:50%;
+  .snd { position:fixed; right:20px; bottom:20px; z-index:55; width:44px; height:44px; border-radius:50%;
     display:none; align-items:center; justify-content:center; cursor:pointer; padding:0;
-    background:rgba(228,221,208,.82); border:1px solid var(--line); color:var(--ink);
-    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
-    transition:opacity .4s ease, border-color .3s ease, transform .3s var(--ease); opacity:.62; }
+    background:var(--ink); border:0; color:#efe9de;
+    box-shadow:0 4px 16px rgba(47,43,36,.3);
+    transition:background .3s ease, transform .3s var(--ease); opacity:1; }
   .snd.ready { display:flex; }
-  .snd:hover { opacity:1; border-color:var(--accent); transform:scale(1.06); }
+  .snd:hover { background:var(--accent); transform:scale(1.07); }
   .snd svg { width:20px; height:20px; }
   .snd .snd-off { display:none; }
-  .snd.is-off { opacity:.45; }
+  .snd.is-off { background:rgba(47,43,36,.42); }
   .snd.is-off .snd-on { display:none; }
   .snd.is-off .snd-off { display:block; }
-  @media (max-width:820px){ .snd { right:14px; bottom:14px; opacity:.8; } }
+  @media (max-width:820px){ .snd { right:14px; bottom:14px; width:42px; height:42px; } }
 
   @media (max-width:820px) {
     .act-hero__frame { height:auto; aspect-ratio:3/4; max-height:82vh; }
@@ -1156,37 +1156,75 @@
     var btn = document.getElementById('snd-btn');
     if(!audio || !btn) return;
 
-    var VOL = 0.18, fade = null, broken = false, wanted = true, inActing = false;
+    var VOL = 0.10, broken = false, wanted = true, inActing = false;
+    var ctx = null, gain = null, pauseT = null, fadeT = null;
     try { wanted = localStorage.getItem('kautkir_sound') !== 'off'; } catch(e){}
 
     function paint(){
-      btn.classList.toggle('is-off', !wanted || broken);
+      btn.classList.toggle('is-off', !wanted);
       btn.classList.toggle('ready', !broken);
     }
-    function fadeTo(target, then){
-      clearInterval(fade);
-      fade = setInterval(function(){
-        var d = target - audio.volume;
-        if(Math.abs(d) < 0.012){ audio.volume = target; clearInterval(fade); if(then) then(); return; }
-        audio.volume = Math.min(1, Math.max(0, audio.volume + (d > 0 ? 0.012 : -0.02)));
-      }, 60);
+
+    /* Web Audio gives real volume control on iOS, where audio.volume is read-only */
+    function graph(){
+      if(ctx) return true;
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if(!AC) return false;
+      try {
+        ctx = new AC();
+        var src = ctx.createMediaElementSource(audio);
+        gain = ctx.createGain();
+        gain.gain.value = 0;
+        src.connect(gain); gain.connect(ctx.destination);
+        return true;
+      } catch(e){ ctx = null; gain = null; return false; }
     }
+
+    function level(target, secs){
+      clearInterval(fadeT);
+      if(gain && ctx){
+        try {
+          var t = ctx.currentTime;
+          gain.gain.cancelScheduledValues(t);
+          gain.gain.setValueAtTime(gain.gain.value, t);
+          gain.gain.linearRampToValueAtTime(target, t + (secs || 0.8));
+          return;
+        } catch(e){}
+      }
+      var steps = 0;
+      fadeT = setInterval(function(){
+        steps++;
+        var d = target - audio.volume;
+        if(steps > 40 || Math.abs(d) < 0.015){
+          try { audio.volume = target; } catch(e){}
+          clearInterval(fadeT); return;
+        }
+        try { audio.volume = Math.min(1, Math.max(0, audio.volume + (d > 0 ? 0.015 : -0.03))); } catch(e){}
+      }, 50);
+    }
+
     function play(){
       if(broken || !wanted || !inActing) return;
-      if(!audio.paused){ fadeTo(VOL); return; }
-      audio.volume = 0;
-      var pr = audio.play();
-      if(pr && pr.then) pr.then(function(){ fadeTo(VOL); }).catch(function(){});
-      else fadeTo(VOL);
+      clearTimeout(pauseT);
+      graph();
+      if(ctx && ctx.state === 'suspended'){ try { ctx.resume(); } catch(e){} }
+      if(audio.paused){
+        level(0, 0.01);
+        var pr = audio.play();
+        if(pr && pr.catch) pr.catch(function(){});
+      }
+      level(VOL, 1.6);
     }
+
+    /* pause on a timer, never on fade completion — iOS would never get there */
     function stop(){
-      clearInterval(fade);
-      fadeTo(0, function(){ try { audio.pause(); } catch(e){} });
+      level(0, 0.45);
+      clearTimeout(pauseT);
+      pauseT = setTimeout(function(){ try { audio.pause(); } catch(e){} }, 500);
     }
 
     audio.addEventListener('error', function(){ broken = true; paint(); });
 
-    /* start inside the tap that enters the acting world (satisfies mobile autoplay rules) */
     document.querySelectorAll('[data-go="acting"]').forEach(function(el){
       el.addEventListener('click', function(){ inActing = true; play(); });
     });
