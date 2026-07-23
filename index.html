@@ -72,36 +72,6 @@
   @keyframes burgerNudge { 0%,72%,100%{transform:scale(1)} 80%{transform:scale(1.14)} 88%{transform:scale(.97)} }
   @keyframes enterArrow { 0%,100%{transform:translateX(0)} 50%{transform:translateX(8px)} }
   @keyframes enterGlow { 0%,100%{opacity:.72} 50%{opacity:1} }
-  @keyframes peelBreathe { 0%,68%,100%{--pw:118px} 84%{--pw:140px} }
-  @keyframes tearBreathe {
-    0%,100% { clip-path: polygon(45% calc(100% - 90px), 52% calc(100% - 96px), 59% calc(100% - 88px), 66% calc(100% - 96px), 73% calc(100% - 89px), 80% calc(100% - 96px), 87% calc(100% - 88px), 95% calc(100% - 93px), 94% calc(100% - 30px), 86% calc(100% - 24px), 79% calc(100% - 32px), 72% calc(100% - 24px), 65% calc(100% - 31px), 58% calc(100% - 24px), 51% calc(100% - 31px), 46% calc(100% - 26px)); }
-    50%     { clip-path: polygon(44% calc(100% - 97px), 52% calc(100% - 104px), 60% calc(100% - 95px), 66% calc(100% - 103px), 74% calc(100% - 96px), 81% calc(100% - 103px), 88% calc(100% - 94px), 96% calc(100% - 100px), 95% calc(100% - 25px), 86% calc(100% - 18px), 79% calc(100% - 27px), 72% calc(100% - 18px), 65% calc(100% - 26px), 58% calc(100% - 18px), 51% calc(100% - 26px), 45% calc(100% - 21px)); }
-  }
-  @property --pw { syntax: '<length>'; inherits: false; initial-value: 118px; }
-
-  /* paper corner peel (mobile only) */
-  .peel { display:none; position:fixed; top:0; left:0; z-index:60; width:var(--pw,118px); height:var(--pw,118px);
-    padding:0; border:0; background:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
-    animation:peelBreathe 5s ease-in-out infinite; transition:width .55s var(--ease), height .55s var(--ease); }
-  .peel__under { position:absolute; inset:0; clip-path:polygon(0 0, 100% 0, 0 100%); background:#d6ccba; }
-  .peel__under b { position:absolute; left:11px; top:9px; font:400 9px/1 'Jost',sans-serif; letter-spacing:.2em; text-transform:uppercase; color:#6a6252; }
-  .peel__under i { position:absolute; left:11px; height:1px; background:#8d8474; opacity:.5; }
-  .peel__under i:nth-of-type(1){ top:26px; width:38%; }
-  .peel__under i:nth-of-type(2){ top:38px; width:24%; }
-  .peel__flap { position:absolute; inset:0; clip-path:polygon(100% 0, 0 100%, 100% 100%);
-    background:linear-gradient(135deg,#efe9dd 0%, #ded4c2 38%, #b8ac97 100%);
-    filter:drop-shadow(-3px 3px 7px rgba(47,43,36,.3)); }
-  body.nav-open .peel { animation:none; width:66px; height:66px; }
-  body.menu-used .peel { animation:none; }
-
-  /* torn hole on gateway doors (mobile only) */
-  .door__tear { display:none; position:absolute; inset:0; z-index:2; pointer-events:none;
-    background-size:cover; background-position:center top; background-repeat:no-repeat;
-    filter:drop-shadow(0 2px 5px rgba(28,22,17,.45));
-    animation:tearBreathe 5.5s ease-in-out infinite; }
-  .door__acting .door__tear { background-image:url("cover-m.jpg"), url("cover.jpg"); }
-  .door__business .door__tear { background-image:url("business-cover-m.jpg"), url("business-cover.jpg"); }
-  .door__inner { z-index:3; }
 
   /* GATEWAY */
   #gateway { position: fixed; inset: 0; display: flex; }
@@ -298,6 +268,21 @@
   .contact-line dd a:hover { border-color:var(--accent); color:var(--accent); }
   #acting .footer { font-family:var(--sans); font-weight:400; letter-spacing:.14em; text-transform:uppercase; font-size:10px; color:var(--muted); }
 
+  /* ambient sound control */
+  .snd { position:fixed; right:18px; bottom:18px; z-index:55; width:42px; height:42px; border-radius:50%;
+    display:none; align-items:center; justify-content:center; cursor:pointer; padding:0;
+    background:rgba(228,221,208,.82); border:1px solid var(--line); color:var(--ink);
+    -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
+    transition:opacity .4s ease, border-color .3s ease, transform .3s var(--ease); opacity:.62; }
+  .snd.ready { display:flex; }
+  .snd:hover { opacity:1; border-color:var(--accent); transform:scale(1.06); }
+  .snd svg { width:20px; height:20px; }
+  .snd .snd-off { display:none; }
+  .snd.is-off { opacity:.45; }
+  .snd.is-off .snd-on { display:none; }
+  .snd.is-off .snd-off { display:block; }
+  @media (max-width:820px){ .snd { right:14px; bottom:14px; opacity:.8; } }
+
   @media (max-width:820px) {
     .act-hero__frame { height:auto; aspect-ratio:3/4; max-height:82vh; }
     .act-bg { background-image:url("cover-m.jpg"), url("cover.jpg"); }
@@ -393,10 +378,19 @@
     #business .nav { background: rgba(238,241,244,.98); border-bottom: 1px solid var(--line); }
     .nav.open { display: flex; }
     .nav a { padding: 13px 4px; font-size: 15px; }
-    .menu-btn { display: none; }
-    .peel { display: block; }
-    .door__tear { display: block; }
+    .menu-btn { display: block; }
     .switch { display: none; }
+    /* burger to the top-left, with an attention pulse */
+    .menu-btn { position: relative; order: -1; margin-left: -6px; }
+    .menu-btn span { width: 24px; height: 2.5px; }
+    .menu-btn::after {
+      content: ""; position: absolute; left: 50%; top: 50%; width: 42px; height: 42px;
+      margin: -21px 0 0 -21px; border-radius: 50%; border: 1.5px solid currentColor;
+      color: var(--accent); opacity: 0; pointer-events: none;
+      animation: burgerRing 3.4s ease-out infinite;
+    }
+    .menu-btn { animation: burgerNudge 3.4s ease-in-out infinite; }
+    body.menu-used .menu-btn, body.menu-used .menu-btn::after { animation: none; }
     /* ENTER cue — reads as a tappable button, with motion */
     .door__enter {
       border: 1px solid currentColor; border-radius: 999px;
@@ -404,8 +398,7 @@
       animation: enterGlow 2.4s ease-in-out infinite;
     }
     .door__enter .arr { animation: enterArrow 1.9s ease-in-out infinite; }
-    /* leave room for the peeled corner */
-    .topbar { justify-content: flex-start; gap: 10px; padding-left: 98px; }
+    .topbar { justify-content: flex-start; gap: 10px; }
     .tb-right { margin-left: auto; }
   }
   @media (max-width: 640px) {
@@ -441,7 +434,6 @@
   </div>
   <div class="door door__acting" data-go="acting">
     <div class="door__photo"></div>
-    <div class="door__tear" aria-hidden="true"></div>
     <div class="door__inner">
       <div class="door__eyebrow" data-i18n="g.act.eyebrow">The things I get inspired by</div>
       <div class="door__title" data-i18n="g.act.title">The Actor</div>
@@ -451,7 +443,6 @@
   </div>
   <div class="door door__business" data-go="business">
     <div class="door__photo"></div>
-    <div class="door__tear" aria-hidden="true"></div>
     <div class="door__inner">
       <div class="door__eyebrow" data-i18n="g.biz.eyebrow">The things I get paid for</div>
       <div class="door__title" data-i18n="g.biz.title">Off Stage Business</div>
@@ -464,7 +455,6 @@
 <!-- ACTING APP -->
 <div id="acting" class="app">
   <header class="topbar">
-    <button class="peel" type="button" data-menu="acting" aria-label="Menu"><span class="peel__under"><b>Menu</b><i></i><i></i></span><span class="peel__flap"></span></button>
     <button class="menu-btn" data-menu="acting" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="brand" data-go="gateway"><span class="dot"></span> KAUTKIR</div>
     <nav class="nav" id="nav-acting">
@@ -648,13 +638,20 @@
     <button class="lb-next" aria-label="Next">&#8250;</button>
     <div class="lb-count"></div>
   </div>
+  <audio id="bgm" src="ambient.mp3" loop preload="none"></audio>
+  <button class="snd" id="snd-btn" type="button" aria-label="Sound on/off" title="Sound">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M4 9.5h3.2L11.5 6v12L7.2 14.5H4z"/>
+      <g class="snd-on"><path d="M15 9.5a4 4 0 0 1 0 5"/><path d="M17.6 7.4a7.5 7.5 0 0 1 0 9.2"/></g>
+      <g class="snd-off"><path d="M15.5 10l4.5 4"/><path d="M20 10l-4.5 4"/></g>
+    </svg>
+  </button>
   <div class="wrap"><div class="footer">© <span class="yr"></span> <span data-i18n="nm.full">Utkirbek Kakhorov</span> · kautkir.uz · <span data-i18n="ft.act">The Actor</span></div></div>
 </div>
 
 <!-- BUSINESS APP -->
 <div id="business" class="app">
   <header class="topbar">
-    <button class="peel" type="button" data-menu="business" aria-label="Menu"><span class="peel__under"><b>Menu</b><i></i><i></i></span><span class="peel__flap"></span></button>
     <button class="menu-btn" data-menu="business" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="brand" data-go="gateway"><span class="dot"></span> <span data-i18n="nm.full">Utkirbek Kakhorov</span></div>
     <nav class="nav" id="nav-business">
@@ -1013,7 +1010,7 @@
   const apps    = { acting: document.getElementById('acting'), business: document.getElementById('business') };
   document.querySelectorAll('.yr').forEach(function(e){ e.textContent = new Date().getFullYear(); });
 
-  function showGateway(){ Object.values(apps).forEach(function(a){ a.classList.remove('active'); }); gateway.classList.remove('hidden'); window.scrollTo(0,0); }
+  function showGateway(){ Object.values(apps).forEach(function(a){ a.classList.remove('active'); }); gateway.classList.remove('hidden'); window.scrollTo(0,0); if(window.__bgm) window.__bgm(null); }
   function showApp(world, section){
     gateway.classList.add('hidden');
     Object.keys(apps).forEach(function(k){ apps[k].classList.toggle('active', k===world); });
@@ -1024,6 +1021,7 @@
     app.querySelectorAll('.nav a').forEach(function(a){ a.classList.toggle('on', a.dataset.sec===(found?section:'home')); });
     app.querySelector('.nav').classList.remove('open');
     window.scrollTo(0,0);
+    if(window.__bgm) window.__bgm(world);
   }
   function route(){
     var h = location.hash.replace(/^#\/?/, '');
@@ -1152,40 +1150,59 @@
       })
       .catch(function(){ cv.style.display = 'none'; });
   })();
-  /* ---------- paper corner peel ---------- */
+  /* ---------- ambient sound (acting side only) ---------- */
   (function(){
-    document.querySelectorAll('.peel').forEach(function(pl){
-      var nav = document.getElementById('nav-' + pl.dataset.menu);
-      if(!nav) return;
-      var BASE = 118, MAX = 260, sx = 0, sy = 0, drag = false, moved = 0;
-      function sync(){ document.body.classList.toggle('nav-open', nav.classList.contains('open')); }
-      pl.addEventListener('pointerdown', function(e){
-        drag = true; moved = 0; sx = e.clientX; sy = e.clientY;
-        pl.style.transition = 'none';
-        document.body.classList.add('menu-used');
-        try { pl.setPointerCapture(e.pointerId); } catch(err){}
-      });
-      pl.addEventListener('pointermove', function(e){
-        if(!drag) return;
-        var d = Math.max(e.clientX - sx, e.clientY - sy);
-        if(d > moved) moved = d;
-        if(d > 0){ var w = Math.min(BASE + d, MAX); pl.style.setProperty('--pw', w + 'px'); }
-      });
-      function release(){
-        if(!drag) return;
-        drag = false;
-        pl.style.transition = '';
-        pl.style.removeProperty('--pw');
-        if(moved > 55) nav.classList.add('open');
-        else nav.classList.toggle('open');
-        sync();
-      }
-      pl.addEventListener('pointerup', release);
-      pl.addEventListener('pointercancel', release);
-      nav.querySelectorAll('a').forEach(function(a){
-        a.addEventListener('click', function(){ document.body.classList.remove('nav-open'); });
-      });
+    var audio = document.getElementById('bgm');
+    var btn = document.getElementById('snd-btn');
+    if(!audio || !btn) return;
+
+    var VOL = 0.18, fade = null, broken = false, wanted = true, inActing = false;
+    try { wanted = localStorage.getItem('kautkir_sound') !== 'off'; } catch(e){}
+
+    function paint(){
+      btn.classList.toggle('is-off', !wanted || broken);
+      btn.classList.toggle('ready', !broken);
+    }
+    function fadeTo(target, then){
+      clearInterval(fade);
+      fade = setInterval(function(){
+        var d = target - audio.volume;
+        if(Math.abs(d) < 0.012){ audio.volume = target; clearInterval(fade); if(then) then(); return; }
+        audio.volume = Math.min(1, Math.max(0, audio.volume + (d > 0 ? 0.012 : -0.02)));
+      }, 60);
+    }
+    function play(){
+      if(broken || !wanted || !inActing) return;
+      if(!audio.paused){ fadeTo(VOL); return; }
+      audio.volume = 0;
+      var pr = audio.play();
+      if(pr && pr.then) pr.then(function(){ fadeTo(VOL); }).catch(function(){});
+      else fadeTo(VOL);
+    }
+    function stop(){
+      clearInterval(fade);
+      fadeTo(0, function(){ try { audio.pause(); } catch(e){} });
+    }
+
+    audio.addEventListener('error', function(){ broken = true; paint(); });
+
+    /* start inside the tap that enters the acting world (satisfies mobile autoplay rules) */
+    document.querySelectorAll('[data-go="acting"]').forEach(function(el){
+      el.addEventListener('click', function(){ inActing = true; play(); });
     });
+
+    btn.addEventListener('click', function(){
+      wanted = !wanted;
+      try { localStorage.setItem('kautkir_sound', wanted ? 'on' : 'off'); } catch(e){}
+      if(wanted) play(); else stop();
+      paint();
+    });
+
+    window.__bgm = function(world){
+      inActing = (world === 'acting');
+      if(inActing) play(); else stop();
+    };
+    paint();
   })();
 </script>
 </body>
