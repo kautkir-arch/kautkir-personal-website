@@ -68,6 +68,10 @@
   #intro .name small { display: block; font-family: 'Jost', sans-serif; font-weight: 400; font-size: 11px; letter-spacing: .42em; text-transform: uppercase; opacity: 0; color: #8f866f; margin-top: 26px; padding-left: .5em; animation: fadeIn .8s ease 1s forwards; }
   @keyframes nameRise { to { transform: translateY(0); opacity: 1; } }
   @keyframes fadeIn { to { opacity: 1; } }
+  @keyframes burgerRing { 0%{transform:scale(.62); opacity:.5} 55%{transform:scale(1.35); opacity:0} 100%{transform:scale(1.35); opacity:0} }
+  @keyframes burgerNudge { 0%,72%,100%{transform:scale(1)} 80%{transform:scale(1.14)} 88%{transform:scale(.97)} }
+  @keyframes enterArrow { 0%,100%{transform:translateX(0)} 50%{transform:translateX(8px)} }
+  @keyframes enterGlow { 0%,100%{opacity:.72} 50%{opacity:1} }
 
   /* GATEWAY */
   #gateway { position: fixed; inset: 0; display: flex; }
@@ -136,8 +140,7 @@
     --disp:'Cormorant Garamond',Georgia,serif; --sans:'Jost',sans-serif;
     background:var(--paper); color:var(--ink2); font-family:var(--sans); font-weight:300;
   }
-  @keyframes kenburns { from{transform:scale(1.09)} to{transform:scale(1)} }
-  @keyframes softIn { from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none} }
+  @keyframes kenburns { from{transform:scale(1.09)} to{transform:scale(1)} }  @keyframes softIn { from{opacity:0; transform:translateY(16px)} to{opacity:1; transform:none} }
   #acting .view.active { animation:softIn 1s var(--ease) both; }
 
   /* portrait plates -> soft faded-film tone + grain (grain from global .portrait::after) */
@@ -362,6 +365,27 @@
     .nav a { padding: 13px 4px; font-size: 15px; }
     .menu-btn { display: block; }
     .switch { display: none; }
+    /* ENTER cue — reads as a tappable button, with motion */
+    .door__enter {
+      border: 1px solid currentColor; border-radius: 999px;
+      padding: 11px 20px; font-size: 12px; letter-spacing: .2em;
+      animation: enterGlow 2.4s ease-in-out infinite;
+    }
+    .door__enter .arr { animation: enterArrow 1.9s ease-in-out infinite; }
+    /* burger to the top-left, with an attention pulse */
+    .topbar { justify-content: flex-start; gap: 10px; }
+    .tb-right { margin-left: auto; }
+    .menu-btn { position: relative; order: -1; margin-left: -6px; }
+    .menu-btn span { width: 24px; height: 2.5px; }
+    .menu-btn::after {
+      content: ""; position: absolute; left: 50%; top: 50%; width: 42px; height: 42px;
+      margin: -21px 0 0 -21px; border-radius: 50%; border: 1.5px solid currentColor;
+      color: var(--accent); opacity: 0; pointer-events: none;
+      animation: burgerRing 3.4s ease-out infinite;
+    }
+    .menu-btn { animation: burgerNudge 3.4s ease-in-out infinite; }
+    body.menu-used .menu-btn, body.menu-used .menu-btn::after { animation: none; }
+    .nav.open ~ * .menu-btn { animation: none; }
   }
   @media (max-width: 640px) {
     .proj-grid, .focus, .gallery-grid { grid-template-columns: repeat(2,1fr); }
@@ -417,6 +441,7 @@
 <!-- ACTING APP -->
 <div id="acting" class="app">
   <header class="topbar">
+    <button class="menu-btn" data-menu="acting" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="brand" data-go="gateway"><span class="dot"></span> KAUTKIR</div>
     <nav class="nav" id="nav-acting">
       <a data-sec="home" class="on" data-i18n="n.home">Home</a>
@@ -429,7 +454,6 @@
     <div class="tb-right">
       <div class="langsel"><button data-lang="uz">UZ</button><button data-lang="en">EN</button></div>
       <div class="switch" data-go="business" data-i18n="sw.biz">⇄ Off Stage Business</div>
-      <button class="menu-btn" data-menu="acting"><span></span><span></span><span></span></button>
     </div>
   </header>
 
@@ -606,6 +630,7 @@
 <!-- BUSINESS APP -->
 <div id="business" class="app">
   <header class="topbar">
+    <button class="menu-btn" data-menu="business" aria-label="Menu"><span></span><span></span><span></span></button>
     <div class="brand" data-go="gateway"><span class="dot"></span> <span data-i18n="nm.full">Utkirbek Kakhorov</span></div>
     <nav class="nav" id="nav-business">
       <a data-sec="home" class="on" data-i18n="n.home">Home</a>
@@ -616,7 +641,6 @@
     <div class="tb-right">
       <div class="langsel"><button data-lang="uz">UZ</button><button data-lang="en">EN</button></div>
       <div class="switch" data-go="acting" data-i18n="sw.act">⇄ Acting side</div>
-      <button class="menu-btn" data-menu="business"><span></span><span></span><span></span></button>
     </div>
   </header>
 
@@ -989,7 +1013,7 @@
     a.addEventListener('click', function(){ var world = a.closest('.app').id; location.hash = '/'+world+'/'+a.dataset.sec; });
   });
   document.querySelectorAll('.menu-btn').forEach(function(b){
-    b.addEventListener('click', function(){ document.getElementById('nav-'+b.dataset.menu).classList.toggle('open'); });
+    b.addEventListener('click', function(){ document.body.classList.add('menu-used'); document.getElementById('nav-'+b.dataset.menu).classList.toggle('open'); });
   });
   window.addEventListener('hashchange', route);
 
