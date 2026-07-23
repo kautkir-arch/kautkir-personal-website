@@ -307,9 +307,9 @@
   /* gateway door photos */
   .door__photo { position:absolute; inset:0; z-index:1; background-size:cover; background-position:center top; background-repeat:no-repeat; }
   .door__acting .door__photo { background-image:url("cover.jpg"); }
-  .door__business .door__photo { background-image:url("business-cover.jpg"); opacity:0; transition:opacity 1s ease; }
-  .door__business::after { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(241,244,247,.5) 0%, transparent 38%, rgba(241,244,247,.86) 100%); opacity:0; transition:opacity 1s ease; }
-  .door__business:hover .door__photo, .door__business:hover::after { opacity:1; }
+  .door__business .door__photo { background-image:url("business-cover.jpg"); opacity:.45; transition:opacity .9s ease; }
+  .door__business::after { content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(241,244,247,.55) 0%, rgba(241,244,247,.15) 38%, rgba(241,244,247,.9) 100%); }
+  .door__business:hover .door__photo { opacity:.85; }
 
   /* actor inner-page faint background portrait (colours stay dominant) */
   .act-bg { position:fixed; inset:0; z-index:0; background:url("cover.jpg") center top/cover no-repeat; opacity:.09; filter:grayscale(.15) sepia(.1); pointer-events:none; }
