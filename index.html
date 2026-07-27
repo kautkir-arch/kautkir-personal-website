@@ -1161,8 +1161,7 @@
     var btn = document.getElementById('snd-btn');
     if(!audio || !btn) return;
 
-    var VOL = 0.10, broken = false, wanted = true, inActing = false;
-    var ctx = null, gain = null, pauseT = null, fadeT = null;
+    var VOL = 0.10, broken = false, wanted = true, inActing = false, pauseT = null, fadeT = null;
     try { wanted = localStorage.getItem('kautkir_sound') !== 'off'; } catch(e){}
 
     function paint(){
@@ -1170,62 +1169,34 @@
       btn.classList.toggle('ready', !broken);
     }
 
-    /* Web Audio gives real volume control on iOS, where audio.volume is read-only */
-    function graph(){
-      if(ctx) return true;
-      var AC = window.AudioContext || window.webkitAudioContext;
-      if(!AC) return false;
-      try {
-        ctx = new AC();
-        var src = ctx.createMediaElementSource(audio);
-        gain = ctx.createGain();
-        gain.gain.value = 0;
-        src.connect(gain); gain.connect(ctx.destination);
-        return true;
-      } catch(e){ ctx = null; gain = null; return false; }
-    }
-
-    function level(target, secs){
+    /* fade by adjusting the element volume directly — no Web Audio, so the file
+       plays exactly as recorded (routing through Web Audio was retuning it) */
+    function level(target, up){
       clearInterval(fadeT);
-      if(gain && ctx){
-        try {
-          var t = ctx.currentTime;
-          gain.gain.cancelScheduledValues(t);
-          gain.gain.setValueAtTime(gain.gain.value, t);
-          gain.gain.linearRampToValueAtTime(target, t + (secs || 0.8));
-          return;
-        } catch(e){}
-      }
-      var steps = 0;
+      var step = up ? 0.01 : 0.03;
       fadeT = setInterval(function(){
-        steps++;
-        var d = target - audio.volume;
-        if(steps > 40 || Math.abs(d) < 0.015){
-          try { audio.volume = target; } catch(e){}
-          clearInterval(fadeT); return;
-        }
-        try { audio.volume = Math.min(1, Math.max(0, audio.volume + (d > 0 ? 0.015 : -0.03))); } catch(e){}
-      }, 50);
+        var v = audio.volume, d = target - v;
+        if(Math.abs(d) < 0.012){ try { audio.volume = target; } catch(e){} clearInterval(fadeT); return; }
+        try { audio.volume = Math.min(1, Math.max(0, v + (d > 0 ? step : -step))); } catch(e){}
+      }, 55);
     }
 
     function play(){
       if(broken || !wanted || !inActing) return;
       clearTimeout(pauseT);
-      graph();
-      if(ctx && ctx.state === 'suspended'){ try { ctx.resume(); } catch(e){} }
       if(audio.paused){
-        level(0, 0.01);
+        try { audio.volume = 0; } catch(e){}
         var pr = audio.play();
         if(pr && pr.catch) pr.catch(function(){});
       }
-      level(VOL, 1.6);
+      level(VOL, true);
     }
 
-    /* pause on a timer, never on fade completion — iOS would never get there */
+    /* mute = pause on a timer (works on iOS, where volume is read-only) */
     function stop(){
-      level(0, 0.45);
+      level(0, false);
       clearTimeout(pauseT);
-      pauseT = setTimeout(function(){ try { audio.pause(); } catch(e){} }, 500);
+      pauseT = setTimeout(function(){ try { audio.pause(); } catch(e){} }, 550);
     }
 
     audio.addEventListener('error', function(){ broken = true; paint(); });
