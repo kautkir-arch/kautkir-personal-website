@@ -76,11 +76,6 @@
   .gw-langsel button.on { background: #fff; color: #111; opacity: 1; }
 
   /* INTRO */
-  #intro { position: fixed; inset: 0; z-index: 100; background: #1a1610; display: grid; place-items: center; transition: transform 1s var(--ease); }
-  #intro.lift { transform: translateY(-101%); }
-  #intro .name { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2.6rem, 11vw, 7rem); letter-spacing: .02em; color: #eee6d8; text-align: center; line-height: 1; transform: translateY(30px); opacity: 0; animation: nameRise 1.3s var(--ease) .25s forwards; }
-  #intro .name small { display: block; font-family: 'Jost', sans-serif; font-weight: 400; font-size: 11px; letter-spacing: .42em; text-transform: uppercase; opacity: 0; color: #8f866f; margin-top: 26px; padding-left: .5em; animation: fadeIn .8s ease 1s forwards; }
-  @keyframes nameRise { to { transform: translateY(0); opacity: 1; } }
   @keyframes fadeIn { to { opacity: 1; } }
   @keyframes burgerRing { 0%{transform:scale(.62); opacity:.5} 55%{transform:scale(1.35); opacity:0} 100%{transform:scale(1.35); opacity:0} }
   @keyframes burgerNudge { 0%,72%,100%{transform:scale(1)} 80%{transform:scale(1.14)} 88%{transform:scale(.97)} }
@@ -438,8 +433,6 @@
 <body>
 
 <!-- INTRO -->
-<div id="intro"><div class="name"><span data-i18n="nm.full">Utkirbek Kakhorov</span><small>kautkir.uz</small></div></div>
-
 <!-- GATEWAY -->
 <div id="gateway" class="hidden">
   <div class="gateway__mark" data-i18n="nm.full">Utkirbek Kakhorov</div>
@@ -1019,7 +1012,6 @@
   });
 
   /* ---------- routing / navigation ---------- */
-  const intro   = document.getElementById('intro');
   const gateway = document.getElementById('gateway');
   const apps    = { acting: document.getElementById('acting'), business: document.getElementById('business') };
   document.querySelectorAll('.yr').forEach(function(e){ e.textContent = new Date().getFullYear(); });
@@ -1057,9 +1049,8 @@
   /* ---------- init ---------- */
   applyLang(detectLang());
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(location.hash && location.hash !== '#/'){ intro.style.display='none'; route(); }
-  else if(reduce){ intro.style.display='none'; showGateway(); }
-  else { setTimeout(function(){ intro.classList.add('lift'); }, 2100); setTimeout(function(){ intro.style.display='none'; showGateway(); }, 3100); }
+  if(location.hash && location.hash !== '#/'){ route(); }
+  else { showGateway(); }
 
   /* ---------- hero photo slideshow ---------- */
   (function(){
